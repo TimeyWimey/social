@@ -27,12 +27,26 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 TEMPLATES_PATH = os.path.join(BASE_DIR, "templates")
+
+STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 
 TEMPLATE_DIRS = (
 	TEMPLATES_PATH,
 )
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, "static"),
+)
+STATIC_URL = '/static/'
+
+
+
+STATICFILES_FINDERS = ( 
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+)
+
 # Application definition
 CORS_ORIGIN_ALLOW_ALL = True
 INSTALLED_APPS = (
@@ -44,7 +58,7 @@ INSTALLED_APPS = (
 	'django.contrib.staticfiles',
 	'polls'
 )
-STATIC_URL = '/static/'
+
 MIDDLEWARE_CLASSES = (
 	'django.contrib.sessions.middleware.SessionMiddleware',
 	'django.middleware.common.CommonMiddleware',
@@ -89,4 +103,4 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
-STATIC_URL = '/static/'
+

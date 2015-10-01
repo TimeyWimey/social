@@ -1,0 +1,64 @@
+.sfx{
+	    display: inline-block;
+    vertical-align: middle;
+    float: none;
+    margin: 0;
+}
+span{
+	background-color: #44A8eb;
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 6px;
+    margin-right: 10px;
+}
+ul{
+	list-style: none;
+}
+input[type='text']{
+        margin-top: 20px;
+    text-transform: uppercase;
+}
+input[type='text']:first-letter{
+     color: red;
+}
+.indisplayable{
+    opacity: 0;
+    transform:translateY(70px);
+    transition:.5s;
+}
+.super-disp{
+    opacity: 1;
+    transform:translateY(0);
+}
+button[disabled], html input[disabled] {
+    cursor: default;
+    opacity: .5;
+}
+#messages-holder{
+        position: fixed;
+    bottom: 0;
+    text-align: center;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+#intro-text{
+    display: block;
+    /* position: static; */
+    margin: auto;
+    /* width: 17px; */
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%);
+    /* font-family: Raleway; */
+    font-size: 32px;
+    font-weight: 100;
+    opacity: .7;
+}
+.sweet-alert button {
+    
+    padding: 1px 31px;
+
+}

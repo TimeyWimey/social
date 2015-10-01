@@ -1,0 +1,246 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Pie Chart</title>
+ <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/normalize.css">
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/skeleton.css">
+   
+     <link rel="stylesheet" href="{{ STATIC_URL }}css/sweetalert.css">
+      <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/style.css">
+    <script src="{{ STATIC_URL }}js/Chart.js"></script>
+    <script src="{{ STATIC_URL }}js/Chart.HorizontalBar.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+     <script src="{{ STATIC_URL }}js/sweetalert.min.js"></script>
+    <script>
+    function toArray(_Object){
+       var _Array = new Array();
+       for(var name in _Object){
+               _Array[name] = _Object[name];
+       }
+       return _Array;
+}
+    var pieData = [{
+            value: 300,
+            color: "#44A8eb",
+            highlight: "#3498db",
+            label: "Мужчины"
+        }, {
+            value: 50,
+            color: "#FF6A6E",
+            highlight: "#FF5A5E",
+            label: "Женщины"
+        }, {
+            value: 100,
+            color: "#FDB45C",
+            highlight: "#FFC870",
+            label: "Группы"
+        }
+
+    ];
+    var barChartData = {
+        labels: ["January", "February", "March", "April", "May", "June", "July"],
+        datasets: [{
+            fillColor: "#44A8eb",
+            strokeColor: "#44A8eb",
+            highlightFill: "#3498db",
+            highlightStroke: "#3498db",
+    
+            data: [200, 110, 14, 21, 115, 250, 310]
+        }, {
+            fillColor: "#FF6A6E",
+            strokeColor: "#FF6A6E",
+            highlightFill: "#FF5A5E",
+            highlightStroke: "#FF5A5E",
+
+            data: [260, 10, 140, 213, 155, 150, 320]
+        },
+         {
+            fillColor: "#FDB45C",
+            strokeColor: "#FDB45C",
+            highlightFill: "#FFC870",
+            highlightStroke: "#FFC870",
+
+            data: [260, 10, 140, 213, 155, 150, 320]
+        }]
+
+    };
+      var sbarChartData = {
+        labels: ["January", "February", "March", "April", "May", "June", "July"],
+        datasets: [{
+            fillColor: "#2ecc71",
+            strokeColor: "#FFF",
+            highlightFill: "#27ae60",
+            highlightStroke: "#FFF",
+    
+            data: [200, 110, 14, 21, 115, 250, 310]
+        }]
+
+    };
+
+    window.onload = function() {
+        legendTemplate1 = '<ul>' + '<% for (var i=0; i<datasets.length; i++) { %>' + '<li>' + '<span style=\"background-color:<%=datasets[i].lineColor%>\">' + '<% if (datasets[i].label) { %><%= datasets[i].label %><% } %>' + '</span></li>' + '<% } %>' + '</ul>'
+       /* var ctx = document.getElementById("chart-area").getContext("2d");
+        window.myPie = new Chart(ctx).Pie(pieData, {
+            animateRotate: false
+        });*/
+        document.getElementById("dous").style.display='none';
+        window.answer={"count_date": {"0": {"man": 0, "girl": 0, "groups": 0}, "1": {"man": 0, "girl": 0, "groups": 0}, "2": {"man": 0, "girl": 0, "groups": 0}, "3": {"man": 0, "girl": 0, "groups": 0}, "4": {"man": 0, "girl": 0, "groups": 0}, "5": {"man": 0, "girl": 0, "groups": 0}, "6": {"man": 0, "girl": 0, "groups": 0}, "7": {"man": 0, "girl": 0, "groups": 0}, "8": {"man": 0, "girl": 0, "groups": 0}, "9": {"man": 0, "girl": 0, "groups": 0}, "10": {"man": 0, "girl": 0, "groups": 0}, "11": {"man": 0, "girl": 0, "groups": 0}, "12": {"man": 0, "girl": 0, "groups": 0}, "13": {"man": 0, "girl": 0, "groups": 0}, "14": {"man": 0, "girl": 0, "groups": 0}, "15": {"man": 0, "girl": 0, "groups": 0}, "16": {"man": 0, "girl": 0, "groups": 0}, "17": {"man": 38, "girl": 31, "groups": 51}, "18": {"man": 24, "girl": 26, "groups": 29}, "19": {"man": 0, "girl": 0, "groups": 0}, "20": {"man": 0, "girl": 0, "groups": 0}, "21": {"man": 0, "girl": 0, "groups": 0}, "22": {"man": 0, "girl": 0, "groups": 0}, "23": {"man": 0, "girl": 0, "groups": 0}}, "count_sex": {"man": 62, "girl": 57, "nosex": 0, "groups": 80}, "count_city": {"Октябрьский": 1, "nouser": 119, "Ростов-на-Дону": 1, "Лянкяран": 1, "Красноярск": 1, "Краснодар": 1, "Ногинск": 1, "Череповец": 1, "Архангельск": 1, "Шексна": 1, "Сумы": 1, "Сочи": 1, "Казань": 2, "nogroup": 28, "Харьков": 1, "Москва": 2, "Санкт-Петербург": 2, "Челябинск": 2, "Ижевск": 1, "Новосибирск": 1, "Волжский": 1, "Анапа": 1, "Вологда": 1, "Заречный": 1, "Коряжма": 1, "Киев": 4, "Тюмень": 1}}
+      /*  console.log(myPie.generateLegend());
+        document.getElementById("sex").innerHTML = myPie.generateLegend();;
+        var ctx1 = document.getElementById("chart-two").getContext("2d");
+        window.myPie = new Chart(ctx1).HorizontalBar(barChartData, {
+            animateRotate: false
+        });
+        var ctx2 = document.getElementById("chart-three").getContext("2d");
+        window.myPie = new Chart(ctx2).HorizontalBar(barChartData, {
+            animateRotate: false
+        }); 
+        var ctx3 = document.getElementById("chart-four").getContext("2d");
+        window.myPie = new Chart(ctx3).Bar(barChartData, {
+            animateRotate: false
+        });*/
+
+    };
+    function createCookie(name, value, days) {
+    var expires;
+
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toGMTString();
+    } else {
+        expires = "";
+    }
+    document.cookie = encodeURIComponent(name) + "=" + encodeURIComponent(value) + expires + "; path=/";
+}
+    function getStat () {
+    	// body...
+        arg=document.getElementById("tag").value;
+        $.ajax({
+    		url:"http://soan.mctf.ru/search/",
+    		data:"searchtext="+arg,
+    		method:"POST",
+            beforeSend: function(xhr){document.getElementById("dous").style.display='none';
+            document.getElementById("but").disabled = true;
+             },
+       
+    		success:function  (argument) {
+    			// body...
+                document.getElementById("dous").style.display='block';
+                document.getElementById("but").disabled = false;
+                getData(argument);
+    			console.log(argument);
+    		},
+    		error:function(argument){
+    			console.log(argument);
+                swal({   title: "Ошибка!",   text: "Упс... Кажется что-то сломалось",   type: "error",   confirmButtonText: "Окей" });
+
+    		}
+    	})
+    }
+    function getData (argument) {
+        pieData[0].value = argument.count_sex.man;
+        pieData[1].value = argument.count_sex.girl;
+        pieData[2].value = argument.count_sex.groups;
+        console.log(pieData)
+        drawPie(pieData);
+        document.getElementById("los").className="six columns indisplayable super-disp";
+        var labels=[];
+        var barData=[];
+
+        for(var name in argument.count_city){
+                if ((name =='nogroup') ||(name =='nouser')) ; else {
+               labels.push(name);
+               barData.push(argument.count_city[name]);}
+       }
+        sbarChartData.datasets[0].data=barData;
+        sbarChartData.labels= labels;
+        drawBar(sbarChartData,"chart-two");
+
+        var labels=[];
+        var barData=[];
+        var barData1=[];
+        var barData2=[];
+
+        for(var name in argument.count_date){
+               labels.push(name+":00 - "+(parseInt(name)+1)+":00");
+               barData.push(argument.count_date[name].man);
+               barData1.push(argument.count_date[name].girl);
+               barData2.push(argument.count_date[name].groups);
+       }
+        barChartData.datasets[0].data=barData;
+        barChartData.datasets[1].data=barData1;
+        barChartData.datasets[2].data=barData2;
+        barChartData.labels= labels;
+        drawVerticalBar(barChartData,"chart-three");
+
+
+
+        // body...
+    }
+    function drawPie (argument) {
+        // body...
+        if (window.myPie1 != undefined) 
+            window.myPie1.destroy();
+         var ctx = document.getElementById("chart-area").getContext("2d");
+        window.myPie1 = new Chart(ctx).Pie(argument, {
+            animateRotate: false
+        });
+        document.getElementById("sex").innerHTML = myPie1.generateLegend();;
+    }
+    function drawBar(argument,id){
+        if (window.myPie2!= undefined) window.myPie2.destroy();
+
+        var ctx1 = document.getElementById(id).getContext("2d");
+        window.myPie2 = new Chart(ctx1).HorizontalBar(argument, {
+            animateRotate: false,
+
+            
+        });
+    }
+     function drawVerticalBar(argument,id){
+        if (window.myPie3!= undefined) window.myPie3.destroy();
+        
+        var ctx1 = document.getElementById(id).getContext("2d");
+        window.myPie3 = new Chart(ctx1).Bar(argument, {
+            animateRotate: false
+        });
+    }
+    </script>
+</head>
+
+<body>
+
+    <div class="container "  >
+    	<div class="row">
+    		<input type="text" id='tag' placeholder='#ХЭШТЕГ'>
+    		<button id="but" onclick="getStat()">найти</button> 
+    	</div>  <hr>
+        
+        <div class="row"id="dous">
+            <div class="six columns indisplayable"  id='los'>
+                <div class="six columns sfx">
+                    <div id="sex"></div>
+                </div>
+                <div class="six columns sfx">
+                    <canvas id="chart-area" style="width:100%;height:100%; min-height:300px;" />
+                </div>
+                <div class="row">
+              <canvas id="chart-three" style="width:100%;height:100%; height:300px;" />
+                    
+        </div>
+            </div>
+            <div class="six columns">
+                <canvas id="chart-two" style="width:100%;height:100%; min-height:600px;" />
+            </div>
+          
+
+        </div>
+        
+        
+    </div>
+</body>
+
+</html>

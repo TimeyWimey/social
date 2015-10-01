@@ -1,9 +1,10 @@
 from django.shortcuts import render
-from django.http.response import HttpResponse, HttpResponseNotFound
+from django.http.response import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.template.loader import get_template
 from django.template import Context
 from django.template.response import TemplateResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import redirect
 import json
 import time
 #для запроса
@@ -12,13 +13,13 @@ from polls.reques import Request
 from polls.settings import api_v
 
 # Create your views here.
-@csrf_exempt
-def home(request):
-	return  TemplateResponse(request, "index.html")
+#@csrf_exempt
+#def home(request):
+#	return  TemplateResponse(request, "index.html")
 	
 def pie(request):
 	if request.method == "GET":
-		return TemplateResponse(request, "Chart/samples/pie.html")
+		return TemplateResponse(request, "pie.html")
 	else:
 		return HttpResponseNotFound
 @csrf_exempt
@@ -27,12 +28,15 @@ def search(request):
 		response_data = {} #результат 
 
 		searchtext =request.POST["searchtext"]
-
+		searchtext = searchtext.replace('#','')
+		
+		if len(searchtext)==0:
+			return HttpResponseNotFound
 		req = Request(api_v)
 
 		r = requests.post(req.request_url('newsfeed.search','q='+searchtext+'&extended=1&count=200&start_time=0&fields=sex,bdate,city,country,can_post,can_see_all_posts,can_see_audio,can_write_private_message')).json()
 
-		type_ = count_type(r)
+		#type_ = count_type(r)
 		sex = count_sex(r)
 		city = count_city(r)
 		date = count_time_pub(r)
@@ -45,14 +49,12 @@ def search(request):
 			'count_date': date
 			#'platfom': platfom
 		}
-		#f = open('log.txt','w')ываыва
-		#f.write(str(r))
-		#f.close()
+		
 		response = HttpResponse(json.dumps(response_data, ensure_ascii=False), content_type="application/json; charset=utf-8")
 		response['Access-Control-Allow-Origin'] = '*'
 		return response
 	else:
-		return HttpResponseNotFound
+		return  HttpResponseRedirect("/")
 
 def con_json(a,b):
 	for i in b:
@@ -169,10 +171,12 @@ def count_type(data):
 	return result
 def count_time_pub(data):
 	result = {}
+	
 	for i in range(0,24):
 		result[i] = {"man":0,"girl":0,"groups":0}
 	for i in range(1,len(data['response'])-1):
 		date = data['response'][i]['date']
+		type_ = ''
 		if ('user' in data['response'][i]):
 			if (data['response'][i]['user'] != None):
 				if (data['response'][i]['user']['sex']==1):
@@ -182,6 +186,11 @@ def count_time_pub(data):
 		elif ('group' in data['response'][i]):
 			type_ = 'groups'
 		date_pub = int(time.strftime("%H", time.localtime(date)))
+		if(type_ ==''):
+			if (str(data['response'][i]['owner_id'])[0] == '-'):
+				type_='groups'
+			else:
+				type_ = 'groups'
 		result[date_pub][type_]+=1
 
 	return result
