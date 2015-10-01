@@ -1,0 +1,150 @@
+﻿<!doctype html>
+<html>
+
+<head>
+    <title>Pie Chart</title>
+    <link rel="stylesheet" href="{{ STATIC_URL }}normalize.css">
+    <link rel="stylesheet" href="{{ STATIC_URL }}skeleton.css">
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}style.css">
+
+    <script src="{{ STATIC_URL }}Chart.js"></script>
+    <script src="{{ STATIC_URL }}ChartHorizontalBar.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script>
+    var pieData = [{
+            value: 300,
+            color: "#44A8eb",
+            highlight: "#3498db",
+            label: "Мужчины"
+        }, {
+            value: 50,
+            color: "#FF6A6E",
+            highlight: "#FF5A5E",
+            label: "Женщины"
+        }, {
+            value: 100,
+            color: "#FDB45C",
+            highlight: "#FFC870",
+            label: "Группы"
+        }
+
+    ];
+    var barChartData = {
+        labels: ["January", "February", "March", "April", "May", "June", "July"],
+        datasets: [{
+            fillColor: "#44A8eb",
+            strokeColor: "#fff",
+            highlightFill: "#3498db",
+            highlightStroke: "#3498db",
+            data: [200, 110, 14, 21, 115, 250, 310]
+        }, {
+            fillColor: "#FF6A6E",
+            strokeColor: "#fff",
+            highlightFill: "#FF5A5E",
+            highlightStroke: "#FF5A5E",
+            data: [260, 10, 140, 213, 155, 150, 320]
+        },
+         {
+            fillColor: "#FDB45C",
+            strokeColor: "#fff",
+            highlightFill: "#FFC870",
+            highlightStroke: "#FFC870",
+            data: [260, 10, 140, 213, 155, 150, 320]
+        }]
+
+    };
+
+    window.onload = function() {
+        legendTemplate1 = '<ul>' + '<% for (var i=0; i<datasets.length; i++) { %>' + '<li>' + '<span style=\"background-color:<%=datasets[i].lineColor%>\">' + '<% if (datasets[i].label) { %><%= datasets[i].label %><% } %>' + '</span></li>' + '<% } %>' + '</ul>'
+        var ctx = document.getElementById("chart-area").getContext("2d");
+        window.myPie = new Chart(ctx).Pie(pieData, {
+            animateRotate: false
+        });
+        console.log(myPie.generateLegend());
+        document.getElementById("sex").innerHTML = myPie.generateLegend();;
+        var ctx1 = document.getElementById("chart-two").getContext("2d");
+        window.myPie = new Chart(ctx1).HorizontalBar(barChartData, {
+            animateRotate: false
+        });
+        var ctx2 = document.getElementById("chart-three").getContext("2d");
+        window.myPie = new Chart(ctx2).HorizontalBar(barChartData, {
+            animateRotate: false
+        }); 
+        var ctx3 = document.getElementById("chart-four").getContext("2d");
+        window.myPie = new Chart(ctx3).Bar(barChartData, {
+            animateRotate: false
+        });
+
+    };
+    function createCookie(name, value, days) {
+    var expires;
+
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toGMTString();
+    } else {
+        expires = "";
+    }
+    document.cookie = encodeURIComponent(name) + "=" + encodeURIComponent(value) + expires + "; path=/";
+}
+    function getCookie(name) {
+      var matches = document.cookie.match(new RegExp(
+        "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+      ));
+      return matches ? decodeURIComponent(matches[1]) : undefined;
+    }
+    function getStat (arg) {
+    	// body...
+
+    	$.ajax({
+    		url:"http://127.0.0.1:8000/search/",
+    		data:"searchtext="+arg,
+    		method:"POST",
+       
+    		success:function  (argument) {
+    			// body...
+    			console.log(argument);
+    		},
+    		error:function(argument){
+    			console.log(argument);
+
+    		}
+    	})
+    }
+    </script>
+</head>
+
+<body>
+    <div class="container">
+    	<div class="row">
+    		<input type="text" placeholder='#ХЭШТЕГ'>
+    		<button>найти</button> 
+    	</div>
+        <div class="row">
+            <div class="six columns">
+                <div class="six columns sfx">
+                    <div id="sex"></div>
+                </div>
+                <div class="six columns sfx">
+                    <canvas id="chart-area" style="width:100%;height:100%; min-height:300px;" />
+                </div>
+            </div>
+            <div class="six columns">
+                <canvas id="chart-two" style="width:100%;height:100%; min-height:300px;" />
+            </div>
+          
+
+        </div>
+          <hr>
+        <div class="row">
+        	<div class="six columns">  <canvas id="chart-three" style="width:100%;height:100%; min-height:300px;" />
+          </div>
+        	<div class="six columns">
+        		<canvas id="chart-four" style="width:100%;height:100%; min-height:300px;" />
+        	</div>
+        </div>
+    </div>
+</body>
+
+</html>
