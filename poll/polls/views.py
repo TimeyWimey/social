@@ -2,11 +2,8 @@ from django.shortcuts import render
 from django.http.response import HttpResponse, HttpResponseNotFound
 from django.template.loader import get_template
 from django.template import Context
-from django.views.decorators.csrf import csrf_protect
 from django.template.response import TemplateResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import ensure_csrf_cookie
 import json
 import time
 #для запроса
@@ -17,7 +14,6 @@ from polls.settings import api_v
 # Create your views here.
 @csrf_exempt
 def home(request):
-
 	return  TemplateResponse(request, "index.html")
 	
 def pie(request):
@@ -34,9 +30,8 @@ def search(request):
 
 		req = Request(api_v)
 
-		r = requests.get(req.request_url('newsfeed.search','q='+searchtext+'&extended=1&count=200&start_time=0&fields=sex,bdate,city,country,can_post,can_see_all_posts,can_see_audio,can_write_private_message')).json()
+		r = requests.post(req.request_url('newsfeed.search','q='+searchtext+'&extended=1&count=200&start_time=0&fields=sex,bdate,city,country,can_post,can_see_all_posts,can_see_audio,can_write_private_message')).json()
 
-		#print(req.request_url('newsfeed.search','q='+searchtext+'&extended=1&count=50ß&start_time=0&fields=sex,bdate,city,country,can_post,can_see_all_posts,can_see_audio,can_write_private_message'))
 		type_ = count_type(r)
 		sex = count_sex(r)
 		city = count_city(r)
@@ -129,7 +124,6 @@ def count_os(data):
 			js = data['response'][i]
 			if ('post_source' in js):
 				if ('platfom' in js['post_source']):
-					print('@')
 					if js['post_source']['platfom']=='android':
 						result['Android']+=1
 					elif (js['post_source']['platfom']=='iphone'):
@@ -176,10 +170,18 @@ def count_type(data):
 def count_time_pub(data):
 	result = {}
 	for i in range(0,24):
-		result[i] = 0
+		result[i] = {"man":0,"girl":0,"groups":0}
 	for i in range(1,len(data['response'])-1):
 		date = data['response'][i]['date']
+		if ('user' in data['response'][i]):
+			if (data['response'][i]['user'] != None):
+				if (data['response'][i]['user']['sex']==1):
+					type_ = 'girl'
+				else:
+					type_ = 'man'
+		elif ('group' in data['response'][i]):
+			type_ = 'groups'
 		date_pub = int(time.strftime("%H", time.localtime(date)))
-		result[date_pub]+=1
+		result[date_pub][type_]+=1
 
 	return result
