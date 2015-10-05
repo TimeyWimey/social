@@ -6,7 +6,7 @@ class Request:
 	class Meta:
 		pass
 	def __init__(self,*pargs):
-		self.api_v = pargs 
+		self.api_v = pargs[0] 
 
 	def request_url(self,method_name, parameters): #универсальный метод запроса к API
 		"""read https://vk.com/dev/api_requests"""
