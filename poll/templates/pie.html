@@ -150,10 +150,10 @@
         var labels=[];
         var barData=[];
 
-        for(var name in argument.count_city){
-                if ((name =='nogroup') ||(name =='nouser')) ; else {
-               labels.push(name);
-               barData.push(argument.count_city[name]);}
+        for(var i in argument.count_city){
+                if ((argument.count_city[i].title =='nogroup') ||(argument.count_city[i].title =='nouser')) ; else {
+               labels.push(argument.count_city[i].title);
+               barData.push(argument.count_city[i].count);}
        }
         sbarChartData.datasets[0].data=barData;
         sbarChartData.labels= labels;

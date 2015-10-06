@@ -28,14 +28,14 @@ def search(request):
 		response_data = {} #результат 
 		searchtext =request.POST["searchtext"]
 
-		searchtext = searchtext.replace('#','')
+		searchtext = searchtext.replace('#','%23')
 		
 		if len(searchtext)==0:
 			return HttpResponseNotFound
 		req = Request(api_v)
 
 		r = requests.post(req.request_url('newsfeed.search','q='+searchtext+'&extended=1&count=200&start_time=0&fields=sex,bdate,city,country,can_post,can_see_all_posts,can_see_audio,can_write_private_message')).json()
-		#print(req.request_url('newsfeed.search','q='+searchtext+'&extended=1&count=200&start_time=0&fields=sex,bdate,city,country,can_post,can_see_all_posts,can_see_audio,can_write_private_message'))
+		print(req.request_url('newsfeed.search','q='+searchtext+'&extended=1&count=200&start_time=0&fields=sex,bdate,city,country,can_post,can_see_all_posts,can_see_audio,can_write_private_message'))
 		
 		type_ = count_type(r)
 		sex = count_sex(r)
@@ -50,7 +50,7 @@ def search(request):
 			'count_date': date
 			#'platfom': platfom
 		}
-		print(response_data)
+		#print(response_data)
 		response = HttpResponse(json.dumps(response_data, ensure_ascii=False), content_type="application/json; charset=utf-8")
 		response['Access-Control-Allow-Origin'] = '*'
 		return response
@@ -74,6 +74,25 @@ def search_json(st, data,result):
 
 def count_city(data):
 	result = {'nousers':0,'nogroups':0}
+	def sort(L):
+	    if L: return sort([x for x in L if x<L[0]]) + [x for x in L if x==L[0]] + sort([x for x in L if x>L[0]])
+	    return []
+
+	def sort_city(data):
+		#print(data)
+		L = sort(list(data.values()))
+		L_title = []
+		for i in range(len(L)):
+			for j in data:
+				if data[j] == L[i]:
+					res = {
+						'title':j,
+						'count':data[j]
+					}
+					L_title.append(res)
+					del data[j]
+					break
+		return L_title
 	def add_city(i,type_):
 		if 'city' in i:
 			if i['city']['title'] in result:
@@ -91,7 +110,12 @@ def count_city(data):
 		add_city(i,'profiles')
 	for i in data['response']['groups']:
 		add_city(i,'groups')
-	return result
+
+	result = sort_city(result)
+	result_short = []
+	for i in range(len(result)-16,len(result)):
+		result_short.append(result[i])
+	return result_short
 
 def count_sex(data):
 	result = {'man':0,'girl':0,'groups':len(data['response']['groups']),'nosex':0}
