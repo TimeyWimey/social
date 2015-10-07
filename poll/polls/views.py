@@ -32,15 +32,34 @@ def search(request):
 		
 		if len(searchtext)==0:
 			return HttpResponseNotFound
-		req = Request(api_v)
 
-		r = requests.post(req.request_url('newsfeed.search','q='+searchtext+'&extended=1&count=200&start_time=0&fields=sex,bdate,city,country,can_post,can_see_all_posts,can_see_audio,can_write_private_message')).json()
-		print(req.request_url('newsfeed.search','q='+searchtext+'&extended=1&count=200&start_time=0&fields=sex,bdate,city,country,can_post,can_see_all_posts,can_see_audio,can_write_private_message'))
+		req = Request(api_v)
 		
-		type_ = count_type(r)
-		sex = count_sex(r)
-		city = count_city(r)
-		date = count_time_pub(r)
+		
+		type_ = {}
+		sex = {'man':0,'girl':0,'groups':0,'nosex':0}
+		city = [{'title':'nousers','count':0},{'title':'nogroups','count':0}]
+		date = {}
+		for i in range(0,24):
+			date[i] = {"man":0,"girl":0,"groups":0}
+			
+		next_from = ''
+		count =5
+		for i in range(count):
+			if next_from!='':
+				r = requests.post(req.request_url('newsfeed.search','q='+searchtext+'&extended=1&count=200&start_from='+str(next_from)+'&start_time=0&fields=sex,bdate,city,country,can_post,can_see_all_posts,can_see_audio,can_write_private_message')).json()
+			else:
+				r = requests.post(req.request_url('newsfeed.search','q='+searchtext+'&extended=1&count=200&start_time=0&fields=sex,bdate,city,country,can_post,can_see_all_posts,can_see_audio,can_write_private_message')).json()
+			if not 'error' in str(r):
+				if 'next_from' in r['response']:
+					next_from = r['response']['next_from']
+				else:
+					break
+				type_ = count_type(r,type_)
+				sex = count_sex(r,sex)
+				city = count_city(r,city)
+				date = count_time_pub(r,date)
+
 		#platfom = count_os(r)
 
 		response_data = {
@@ -72,39 +91,49 @@ def search_json(st, data,result):
 				result[data[i]]=1
 	return result
 
-def count_city(data):
-	result = {'nousers':0,'nogroups':0}
+def count_city(data,result):
+	def search_on_list(data,title):
+		for i in range(len(data)):
+			if data[i]['title'] == title:
+				return i
+		return -1
+	def get_value(data):
+		r = []
+		for i in range(len(data)):
+			r.append(data[i]['count'])
+		return r
 	def sort(L):
 	    if L: return sort([x for x in L if x<L[0]]) + [x for x in L if x==L[0]] + sort([x for x in L if x>L[0]])
 	    return []
 
 	def sort_city(data):
 		#print(data)
-		L = sort(list(data.values()))
+		L = sort(get_value(data))
 		L_title = []
 		for i in range(len(L)):
-			for j in data:
-				if data[j] == L[i]:
-					res = {
-						'title':j,
-						'count':data[j]
-					}
-					L_title.append(res)
-					del data[j]
+			for j in range(len(data)):
+				if data[j]['count'] == L[i]:
+					L_title.append(data[j])
+					data.pop(j)
 					break
 		return L_title
+
 	def add_city(i,type_):
 		if 'city' in i:
-			if i['city']['title'] in result:
-				result[i['city']['title']] += 1
-
+			index = search_on_list(result,i['city']['title'])
+			if index!=-1:
+				result[index]['count'] += 1
 			else:
-				result[i['city']['title']] = 1
+				res = {
+						'title':i['city']['title'],
+						'count':1
+				}
+				result.append(res)
 		else:
 			if type_=='profiles':
-				result['nousers'] += 1
+				result[search_on_list(result,'nousers')]['count'] += 1
 			else:
-				result['nogroups'] += 1
+				result[search_on_list(result,'nogroups')]['count'] += 1
 
 	for i in data['response']['profiles']:
 		add_city(i,'profiles')
@@ -117,8 +146,8 @@ def count_city(data):
 		result_short.append(result[i])
 	return result_short
 
-def count_sex(data):
-	result = {'man':0,'girl':0,'groups':len(data['response']['groups']),'nosex':0}
+def count_sex(data,result):
+	result['groups'] = len(data['response']['groups'])
 	for i in data['response']['profiles']:
 		if 'sex' in i:
 			if i['sex'] == 1:
@@ -155,16 +184,15 @@ def count_os(data):
 	return result
 
 
-def count_type(data):
-	result = {}
+def count_type(data,result):
 	for i in data['response']['items']:
 		if i['post_type'] in result:
 			result[i['post_type']] += 1
 		else:
 			result[i['post_type']] = 1
 	return result
-def count_time_pub(data):
-	result = {}
+
+def count_time_pub(data, result):
 
 	def find_sex(id_,data):
 		for i in data:
@@ -172,8 +200,6 @@ def count_time_pub(data):
 				return i['sex']
 		return -1
 
-	for i in range(0,24):
-		result[i] = {"man":0,"girl":0,"groups":0}
 	for i in data['response']['items']:
 		date = i['date']
 		type_=''
