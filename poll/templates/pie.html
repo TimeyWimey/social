@@ -128,7 +128,7 @@
        
     		success:function  (argument) {
     			// body...
-                document.getElementById("dous").fadeIn(300);
+                $("#dous").fadeIn(300);
                 document.getElementById("but").disabled = false;
                 getData(argument);
     			console.log(argument);
@@ -208,7 +208,7 @@
             animateRotate: false
         });
     }
-    
+
     window.isShowing=false;
     function showSet (argument) {
         isShowing ?
