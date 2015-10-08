@@ -79,6 +79,8 @@ margin-top: 0;
     border-radius: 4px;
     font-weight: 300;
     transition:.25s;
+    vertical-align: top;
+    margin-top: 20px;
 }
 button:hover{
     background-color: #56A9FF;
@@ -193,6 +195,7 @@ input[type="range"]:active::-webkit-slider-thumb
     width: 20px;
     cursor: pointer;
     transition:.3s;
+        color: #636262;
     }
     .icon:hover{
         color: #56A9FF;
