@@ -220,6 +220,10 @@
             isShowing=!isShowing;
         // body...
     }
+        function fun(){
+    document.getElementById('val').innerHTML=document.getElementById('x').value;
+    
+}
     </script>
 </head>
 
@@ -233,7 +237,8 @@
                     <div>Настройки</div>
                     <hr>
                     <div>Глубина поиска</div>
-                    <input type="range" max='3' min='0'>
+                  <input type="range" id='x' min="200" max="1000" oninput='fun()' step='200' value='200'>
+                    <div id="val">200</div>
                 </div>
             </div>
             <input type="text" id='tag' placeholder='#ХЭШТЕГ'>
