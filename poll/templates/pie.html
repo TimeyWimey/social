@@ -208,31 +208,59 @@
             animateRotate: false
         });
     }
+    
+    window.isShowing=false;
+    function showSet (argument) {
+        isShowing ?
+
+            $('#sheet').fadeOut(300) :$('#sheet').fadeIn(300);
+
+            $('#icon').toggleClass("opened"); 
+
+            isShowing=!isShowing;
+        // body...
+    }
     </script>
 </head>
 
 <body>
 
     <div class="container "  >
-    	<div class="row">
-    		<input type="text" id='tag' placeholder='#ХЭШТЕГ'>
-    		<button id="but" onclick="getStat()">найти</button> 
-    	</div>  <hr>
+        <div class="row">
+            <div class="settings">
+                <div class="icon" id="icon" onclick="showSet()"><i class="material-icons">&#xE8B8;</i></div>
+                <div class="sheet" id='sheet'>
+                    <div>Настройки</div>
+                    <hr>
+                    <div>Глубина поиска</div>
+                    <input type="range" max='3' min='0'>
+                </div>
+            </div>
+            <input type="text" id='tag' placeholder='#ХЭШТЕГ'>
+            <button id="but" onclick="getStat()">найти</button> 
+
+                
+        </div>  <hr>
         
         <div class="row"id="dous">
-            <div class="six columns indisplayable"  id='los'>
-                <div class="six columns sfx">
-                    <div id="sex"></div>
-                </div>
-                <div class="six columns sfx">
-                    <canvas id="chart-area" style="width:100%;height:100%; min-height:300px;" />
-                </div>
-                <div class="row">
+         <div class="row">
+         <h3 >Статистика по времени</h3>
               <canvas id="chart-three" style="width:100%;height:100%; height:300px;" />
                     
         </div>
+        <div class="row">
+            <div class="six columns indisplayable"  id='los'>
+            <h3 >Статистика по полу</h3>
+                <div class="four columns sfx">
+                    <div id="sex"></div>
+                </div>
+                <div class="eight columns sfx">
+                    <canvas id="chart-area" style="width:100%;height:100%; min-height:300px;" />
+                </div>
+               
             </div>
             <div class="six columns">
+            <h3 >Статистика по городам</h3>
                 <canvas id="chart-two" style="width:100%;height:100%; min-height:600px;" />
             </div>
           
@@ -240,7 +268,9 @@
         </div>
         
         
+        </div>
     </div>
+    <div id="chartjs-tooltip"></div>
 </body>
 
 </html>
