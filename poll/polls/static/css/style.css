@@ -1,3 +1,7 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,300&subset=latin,cyrillic);
+body{
+    font-family: roboto, sans-serif;
+}
 .sfx{
 	    display: inline-block;
     vertical-align: middle;
@@ -61,4 +65,34 @@ button[disabled], html input[disabled] {
     
     padding: 1px 31px;
 
+}
+button, .button {
+margin-top: 0;
+    /* position: relative; */
+    /* top: -1px; */
+    -webkit-appearance: none;
+    height: 40px;
+    box-sizing: border-box;
+    background-color: white;
+    border: 1px solid #56A9FF;
+    padding: 0 20px;
+    border-radius: 4px;
+    font-weight: 300;
+    transition:.25s;
+}
+button:hover{
+    background-color: #56A9FF;
+    color: white;
+}
+input[type='text'] {
+    margin-top: 20px;
+    text-transform: uppercase;
+    height: 40px;
+    box-sizing: border-box;
+    padding: 0 0px 0 10px;
+    border: 1px solid #56A9FF;
+    /* padding: 0 20px; */
+    border-radius: 4px;
+    outline: none;
+    font-weight: 300;
 }
