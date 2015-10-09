@@ -122,7 +122,7 @@
         arg=document.getElementById("tag").value;
         $.ajax({
     		url:"http://127.0.0.1:8000/search/",
-    		data:"searchtext="+arg,
+    		data:"searchtext="+arg+ "&count="+document.getElementById('x').value,
     		method:"POST",
             beforeSend: function(xhr){document.getElementById("dous").style.display='none';
             document.getElementById("but").disabled = true;
