@@ -6,6 +6,8 @@
  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
     <link rel="stylesheet" href="{{ STATIC_URL }}css/normalize.css">
     <link rel="stylesheet" href="{{ STATIC_URL }}css/skeleton.css">
+       <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
    
      <link rel="stylesheet" href="{{ STATIC_URL }}css/sweetalert.css">
       <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/style.css">
@@ -222,7 +224,7 @@
     }
         function fun(){
     document.getElementById('val').innerHTML=document.getElementById('x').value;
-    
+
 }
     </script>
 </head>
@@ -241,6 +243,10 @@
                     <div id="val">200</div>
                 </div>
             </div>
+            <a href="../" style="
+    margin-right: 12px;
+    text-decoration: none;
+">На главную</a>
             <input type="text" id='tag' placeholder='#ХЭШТЕГ'>
             <button id="but" onclick="getStat()">найти</button> 
 
